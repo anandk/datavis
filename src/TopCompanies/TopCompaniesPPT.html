@@ -4,15 +4,26 @@
 <style type="text/css">
 body{font-family: Arial, sans-serif;font-size:10px;}
 .axis path,.axis line {fill: none;stroke:#b6b6b6;shape-rendering: crispEdges;}
-/*.tick line{fill:none;stroke:none;}*/
 .tick text{fill:#999;}
-g.journal.active{cursor:pointer;}
+g.ranking.active{cursor:pointer;}
 text.label{font-size:12px;font-weight:bold;cursor:pointer;}
 text.value{font-size:12px;font-weight:bold;}
+.intro{
+        font-family:"jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+        letter-spacing:-0.02em;
+        font-weight:300;
+        font-style:normal;
+        letter-spacing:-0.04em;
+        font-size:30px;
+        line-height:1.1;
+        margin-bottom:8px
+    }
 </style>
 </head>
 <body>
-<p>Testing</p>
+<p class="intro">Testing</p>
+<br>
+<br>
 <script type="text/javascript">
 function truncate(str, maxLength, suffix) {
 	if(str.length > maxLength) {
@@ -42,7 +53,7 @@ var xAxis = d3.svg.axis()
 var formatYears = d3.format("0000");
 xAxis.tickFormat(formatYears);
 
-var svg = d3.select("body").append("svg")
+    var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.left + margin.right)
 	.attr("height", height + margin.top + margin.bottom)
 	.style("margin-left", margin.left + "px")
@@ -55,13 +66,27 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 		.domain([start_year, end_year])
 		.range([0, width]);
 
-	svg.append("g")
+    for(var k=start_year; k <= end_year; k++)
+    {
+        var g2 = svg.append("g")
+                .attr("class","year")
+                .attr("transform","translate(0," + 20 + ")");
+        g2.append("circle")
+          .attr("cx", xScale(k))
+          .attr("cy",42)
+          .attr("r", 10)
+          .attr("year", k)
+          .style("fill", "#f1f1f1")
+          .on("mouseover",annualRanking);
+    }
+    
+    svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + 0 + ")")
+		.attr("transform", "translate(0," + 65 + ")")
 		.call(xAxis);
-
-	for (var j = 0; j < data.length; j++) {
-		var g = svg.append("g").attr("class","journal");
+    
+    for (var j = 0; j < data.length; j++) {
+		var g = svg.append("g").attr("class","ranking");
 
 		var circles = g.selectAll("circle")
 			.data(data[j]['rank'])
@@ -78,13 +103,13 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 			.range([5, 19]);
 
 		circles
-			.attr("cx", function(d, i) { return xScale(d[0]); })
-			.attr("cy", j*40+20)
+			.attr("cx", function(d) { return xScale(d[0]); })
+			.attr("cy", j*40+90)
 			.attr("r", function(d) { return (21-rScale(d[1])); })
 			.style("fill", function(d) { return c(j); });
 
 		text
-			.attr("y", j*40+25)
+			.attr("y", j*40+90)
 			.attr("x",function(d, i) { return xScale(d[0])-5; })
 			.attr("class","value")
 			.text(function(d){ return d[1]; })
@@ -92,7 +117,7 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 			.style("display","none");
 
 		g.append("text")
-			.attr("y", j*40+25)
+			.attr("y", j*40+90)
 			.attr("x",width+30)
 			.attr("class","label")
 			.text(truncate(data[j]['orgName'],30,"..."))
@@ -100,6 +125,54 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 			.on("mouseover", mouseover)
 			.on("mouseout", mouseout);
 	};
+    
+    function annualRanking(){
+        var g = d3.select(this).node().parentNode.parentNode;
+        d3.select(g).selectAll(".ranking").style("display","none");
+        renderAnnualRanking(this,g);
+    }
+    
+    function renderAnnualRanking(context,g){
+        d3.json("../../data/companiesPerYear.json", function(data) {
+            var yScale = d3.scale.linear()
+		                      .domain([1,20])
+		                      .range([0, height]);
+            var g2=d3.select(context).node();
+            for(var w=0; w < (end_year-start_year)+1 ; w++) {
+                if(data[w]['year'] == context.attributes['year'].value)
+                {
+                    var annualRanking_g = svg.append("g").attr("class","annualRanking");
+                    for (var cos=0; cos<20;cos++)
+                    {
+                        var circles = annualRanking_g.selectAll("circle")
+                                     .data(data[w]['orgs'])
+                                     .enter()
+                                     .append("circle");
+                        circles
+                            .attr("cx", context.attributes['cx'].value)
+                            .attr("cy", function(d) { return cos*20+90;} )
+                            .attr("r", 9)
+                            .style("fill","#fdae6b");
+                
+                        
+                        console.log(cos*20+90);
+                        console.log(cos+" ---- "+w);
+                        
+                        annualRanking_g.append("text")
+                            .attr("y", cos*20+95)
+                            .attr("x",width+30)
+                            .attr("class","label")
+                            .text(truncate(data[w]['orgs'][cos][0],30,"..."))
+                            .style("fill", "#3182bd");
+
+                    }
+                    break;
+                }
+                
+            }
+                
+        });
+    }
 
 	function mouseover(p) {
 		var g = d3.select(this).node().parentNode;
@@ -113,7 +186,8 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 		d3.select(g).selectAll("text.value").style("display","none");
 	}
 });
-
+    
+    
 </script>
 
 </body>
