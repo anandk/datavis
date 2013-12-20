@@ -14,15 +14,17 @@ text.value{font-size:12px;font-weight:bold;}
         font-weight:300;
         font-style:normal;
         letter-spacing:-0.04em;
-        font-size:30px;
+        font-size:20px;
         line-height:1.1;
-        margin-bottom:8px
+        margin-bottom:8px;
+        margin-left:200px;
+        margin-right:200px;
+        margin-top:20px
     }
 </style>
 </head>
 <body>
-<p class="intro">Testing</p>
-<br>
+<p class="intro">The visualisation below shows the companies that have held a position in the Top 20 Companies for at least 7 years. To see how each of the companies below fared across the 10 years, hover the mouse pointer over the company name. To know the 20 companies & their ranking for any given year, please hover over the year (along the top axis).</p>
 <br>
 <script type="text/javascript">
 function truncate(str, maxLength, suffix) {
@@ -34,7 +36,7 @@ function truncate(str, maxLength, suffix) {
 	return str;
 }
 
-var margin = {top: 20, right: 200, bottom: 0, left: 20},
+var margin = {top: 20, right: 200, bottom: 0, left: 200},
 	width = 500,
 	height = 1250;
 
@@ -73,7 +75,7 @@ d3.json("../../data/consistentCompanies.json", function(data) {
                 .attr("transform","translate(0," + 20 + ")");
         g2.append("circle")
           .attr("cx", xScale(k))
-          .attr("cy",42)
+          .attr("cy",12)
           .attr("r", 10)
           .attr("year", k)
           .style("fill", "#f1f1f1")
@@ -83,7 +85,7 @@ d3.json("../../data/consistentCompanies.json", function(data) {
     
     svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + 65 + ")")
+		.attr("transform", "translate(0," + 35 + ")")
 		.call(xAxis);
     
     for (var j = 0; j < data.length; j++) {
@@ -105,12 +107,12 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 
 		circles
 			.attr("cx", function(d) { return xScale(d[0]); })
-			.attr("cy", j*40+90)
+			.attr("cy", j*40+70)
 			.attr("r", function(d) { return (21-rScale(d[1])); })
 			.style("fill", function(d) { return c(j); });
 
 		text
-			.attr("y", j*40+90)
+			.attr("y", j*40+70)
 			.attr("x",function(d, i) { return xScale(d[0])-5; })
 			.attr("class","value")
 			.text(function(d){ return d[1]; })
@@ -118,7 +120,7 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 			.style("display","none");
 
 		g.append("text")
-			.attr("y", j*40+90)
+			.attr("y", j*40+70)
 			.attr("x",width+30)
 			.attr("class","label")
 			.text(truncate(data[j]['orgName'],30,"..."))
@@ -153,26 +155,35 @@ d3.json("../../data/consistentCompanies.json", function(data) {
                                      .data(data[w]['orgs'])
                                      .enter()
                                      .append("circle");
-                    var annualText = annualRanking_g.selectAll("text").data(data[w]['orgs'])
+                    var annualText = annualRanking_g.selectAll(".annualLabel").data(data[w]['orgs'])
+                                     .enter()
+                                     .append("text");
+                    
+                    var annualRank = annualRanking_g.selectAll(".annualRank").data(data[w]['orgs'])
                                      .enter()
                                      .append("text");
                     
                     circles
                             .attr("cx", context.attributes['cx'].value)
                             .attr("cy", function(d) { 
-                                return (d[1]-1)*20+90;
+                                return (d[1]-1)*28+70;
                             } )
-                            .attr("r", 9)
+                            .attr("r", 12)
                             .style("fill","#fdae6b");
+                    
+                    annualRank
+                            .attr("x",context.attributes['cx'].value-3)
+                            .attr("y",function(d) {return (d[1]-1)*28+72;})
+                            .text(function(d) {return d[1];})
+                            .style("fill","#1f1f1f");
                         
                     annualText
                             .attr("y", function(d) { 
-                                return (d[1]-1)*20+95;
+                                return (d[1]-1)*28+75;
                             } )
                             .attr("x",width+30)
                             .attr("class","annualLabel")
                             .text(function(d) {
-                                console.log("d[0]: "+d[0]+" at "+(width+50)+", "+((d[1]-1)*20+95));
                                 return truncate(d[0],30,"...");}
                                  )
                             .style("fill", "#3182bd");
