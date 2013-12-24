@@ -5,6 +5,7 @@
 body{font-family: Arial, sans-serif;font-size:10px;}
 .axis path,.axis line {fill: none;stroke:#b6b6b6;shape-rendering: crispEdges;}
 .tick text{fill:#999;}
+path {fill:none;stroke:#15c2c2;stroke-width: 1.5px;}
 g.ranking.active{cursor:pointer;}
 text.label{font-size:12px;font-weight:bold;cursor:pointer;}
 text.value{font-size:12px;font-weight:bold;}
@@ -27,52 +28,55 @@ text.value{font-size:12px;font-weight:bold;}
 <p class="intro">The visualisation below shows the companies that have held a position in the Top 20 Companies for at least 7 years. To see how each of the companies below fared across the 10 years, hover the mouse pointer over the company name. To know the 20 companies & their ranking for any given year, please hover over the year (along the top axis).</p>
 <br>
 <script type="text/javascript">
-function truncate(str, maxLength, suffix) {
-	if(str.length > maxLength) {
-		str = str.substring(0, maxLength + 1); 
-		str = str.substring(0, Math.min(str.length, str.lastIndexOf(" ")));
-		str = str + suffix;
-	}
-	return str;
-}
+    function truncate(str, maxLength, suffix) {
+        if(str.length > maxLength) {
+            str = str.substring(0, maxLength + 1); 
+            str = str.substring(0, Math.min(str.length, str.lastIndexOf(" ")));
+            str = str + suffix;
+        }
+        return str;
+    }
+    
+    var consistentCompaniesJSON = '[{"rank": [[2007, 1], [2008, 1], [2009, 4], [2010, 4], [2011, 4], [2012, 1], [2013, 1]], "orgName": "Google"}, {"rank": [[2004, 8], [2005, 16], [2009, 20], [2010, 1], [2011, 1], [2012, 3], [2013, 2]], "orgName": "SAS"}, {"rank": [[2004, 4], [2006, 16], [2008, 4], [2009, 2], [2010, 2], [2011, 11], [2012, 5], [2013, 8]], "orgName": "Edward Jones"}, {"rank": [[2004, 10], [2005, 1], [2006, 2], [2007, 3], [2008, 3], [2009, 5], [2010, 3], [2011, 3], [2012, 4], [2013, 5]], "orgName": "Wegmans"}, {"rank": [[2006, 11], [2007, 8], [2008, 11], [2009, 3], [2010, 8], [2011, 2], [2012, 2], [2013, 4]], "orgName": "BCG"}, {"rank": [[2004, 13], [2005, 12], [2006, 13], [2007, 17], [2008, 2], [2012, 10], [2013, 13]], "orgName": "Quicken Loans"}, {"rank": [[2004, 15], [2005, 4], [2006, 1], [2007, 2], [2008, 5], [2009, 7], [2010, 19]], "total": 22, "orgName": "Genentech"}]';
+    
+    var companiesPerYearJSON = '[{"year":2004, "orgs":[["J.M.Smucker", 1], ["Alston & Bird", 2], ["Container Store", 3], ["Edward Jones", 4], ["Republic Bancorp", 5], ["Adobe Systems", 6], ["TDIndustries", 7], ["SAS", 8], ["Wegmans", 9], ["Xilinx", 10], ["CDW", 11], ["W.L.Gore", 12], ["Quicken Loans", 13], ["Third Federal S&L", 14], ["Genentech", 15], ["Milliken", 16], ["Vision Service Plan", 17], ["Plante&Moran", 18], ["JM Family", 19], ["Synovus", 20]]},{"year":2005, "orgs":[["Wegmans", 1], ["W.L.Gore", 2], ["Republic Bancorp", 3], ["Genentech", 4], ["Xilinx", 5], ["J.M.Smucker", 6], ["S.C.Johnson", 7], ["Griffin Hospital", 8], ["Alston & Bird", 9], ["Vision Service Plan", 10], ["Starbucks", 11], ["Quicken Loans", 12], ["Adobe Systems", 13], ["CDW", 14], ["Container Stores", 15], ["SAS", 16], ["Qualcomm", 17], ["Robert W.Baird", 18], ["Quik Trip", 19], ["HomeBanc Mortgage", 20]]},{"year":2006, "orgs":[["Genentech", 1], ["Wegmans", 2], ["Valero Energy", 3], ["Griffin Hospital", 4], ["W.L.Gore", 5], ["Container Store", 6], ["Vision Service Plan", 7], ["J.M.Smucker", 8], ["REI", 9], ["S.C.Johnson", 10], ["BCG", 11], ["Plante & Moran", 12], ["Quicken Loans", 13], ["HomeBanc Mortgages", 14], ["Whole Foods Market", 15], ["Edward Jones", 16], ["Republic Bancorp", 17], ["Baptist Healthcare", 18], ["Alston & Bird", 19], ["Kimley-Horn & Associates ", 20]]},{"year":2007, "orgs":[["Google", 1], ["Genentech", 2], ["Wegmans", 3], ["Container Store", 4], ["Whole Food Market", 5], ["Network Appliance", 6], ["S.C.Johnson", 7], ["BCG", 8], ["Methodist Hospital", 9], ["W.L.Gore", 10], ["Cisco Systems", 11], ["David Weekly Homes", 12], ["Nugget Market", 13], ["Qualcomm", 14], ["American Century", 15], ["Starbucks", 16], ["Quicken Loans", 17], ["Station Casinos", 18], ["Alston & Bird", 19], ["QuikTrip", 20]]},{"year":2008, "orgs":[["Google", 1], ["Quicken Loans", 2], ["Wegmans", 3], ["Edward Jones", 4], ["Genentech", 5], ["Cisco Systems", 6], ["Starbucks", 7], ["Qualcomm", 8], ["Goldman Sachs", 9], ["Methodist Hospital", 10], ["BCG", 11], ["Nugget Market", 12], ["Umpqua Bank", 13], ["Network Appliance", 14], ["W.L.Gore", 15], ["Whole Foods Market", 16], ["David Weekeley Homes", 17], ["OhioHealth", 18], ["Arnold & Porter", 19], ["Container Store", 20]]},{"year":2009, "orgs":[["NetApp", 1], ["Edward Jones", 2], ["BCG", 3], ["Google", 4], ["Wegmans", 5], ["Cisco Systems", 6], ["Genentech", 7], ["Methodist Hospital", 8], ["Goldman Sachs", 9], ["Nugget Market", 10], ["Adobe Systems", 11], ["REI", 12], ["Devon Energy", 13], ["Robert W.Baird", 14], ["W.L.Gore", 15], ["Qualcomm", 16], ["Principal Financial", 17], ["SharedTech", 18], ["OhioHealth", 19], ["SAS", 20]]},{"year":2010, "orgs":[["SAS", 1], ["Edward Jones", 2], ["Wegmans", 3], ["Google", 4], ["Nugget Market", 5], ["DreamWorks", 6], ["NetApp", 7], ["BCG", 8], ["Qualcomm", 9], ["Camden Property", 10], ["Robert W.Baird", 11], ["Bingham McCutchen", 12], ["W.L.Gore", 13], ["REI", 14], ["Zappos.com", 15], ["Cisco Systems", 16], ["Methodist Hospital", 17], ["Whole Foods market", 18], ["Genentech", 19], ["Devon Energy", 20]]},{"year":2011, "orgs":[["SAS", 1], ["BCG", 2], ["Wegmans", 3], ["Google", 4], ["NetApp", 5], ["Zappos.com", 6], ["Camden Property", 7], ["Nugget Market", 8], ["REI", 9], ["DreamWorks", 10], ["Edward Jones", 11], ["Scottrade", 12], ["Alston & Bird", 13], ["Robert W.Baird", 14], ["Mercedes-Benz", 15], ["JM Family", 16], ["USAA", 17], ["Stew Leonard\'s", 18], ["Methodist Hospital", 19], ["Cisco Systems", 20]]},{"year":2012, "orgs":[["Google", 1], ["BCG", 2], ["SAS", 3], ["Wegmans", 4], ["Edward Jones", 5], ["NetApp", 6], ["Camden Property", 7], ["Qualcomm", 8], ["DreamWorks", 9], ["Quicken Loans", 10], ["Zappos.com", 11], ["Mercedes-Benz", 12], ["DPR Construction", 13], ["Dreamworks", 14], ["NuStar Energy", 15], ["Kimpton Hotels", 16], ["JM Family", 17], ["Chesapeake Energy", 18], ["Intuit", 19], ["USAA", 20]]},{"year":2013, "orgs":[["Google", 1], ["SAS", 2], ["CHG Healthcare", 3], ["BCG", 4], ["Wegmans", 5], ["NetApp", 6], ["Hilcorp Energy", 7], ["Edward Jones", 8], ["Ultimate Software", 9], ["Camden Property", 10], ["Qualcomm", 11], ["DreamWorks", 12], ["Quicken Loans", 13], ["Robert W.Baird", 14], ["DPR Construction", 15], ["Container Store", 16], ["REI", 17], ["Burns & McDonnell", 18], ["Salesforce.com", 19], ["Millennium:Oncology Company", 20]]}]';
 
-var margin = {top: 20, right: 200, bottom: 0, left: 200},
-	width = 500,
-	height = 1250;
-
-var start_year = 2004,
-	end_year = 2013;
-
-var c = d3.scale.category20c();
-
-var x = d3.scale.linear()
-	.range([0, width]);
-
-var xAxis = d3.svg.axis()
-	.scale(x)
-	.orient("top");
-
-var formatYears = d3.format("0000");
-xAxis.tickFormat(formatYears);
-
+    var margin = {top: 20, right: 200, bottom: 0, left: 200},
+        width = 500,
+        height = 650;
+    
+    var start_year = 2004,
+        end_year = 2013;
+    var lowestRank = 20;
+    var highestRank = 1;
+    
+    var c = d3.scale.category20c();
+    
+    var xOffset = 20;
+    var yOffset = 35;
+        
+    var xScale = d3.scale.linear()
+            .domain([start_year, end_year])
+            .range([xOffset, width]);
+    
+    var yScale = d3.scale.linear()
+                    .domain([highestRank,lowestRank])
+                    .range([yOffset, height]);    
+    
     var svg = d3.select("body").append("svg")
-	.attr("width", width + margin.left + margin.right)
-	.attr("height", height + margin.top + margin.bottom)
-	.style("margin-left", margin.left + "px")
-	.append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.json("../../data/consistentCompanies.json", function(data) {
-	x.domain([start_year, end_year]);
-	var xScale = d3.scale.linear()
-		.domain([start_year, end_year])
-		.range([0, width]);
-
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .style("margin-left", margin.left + "px")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+    data = JSON.parse(consistentCompaniesJSON);
+    
     for(var k=start_year; k <= end_year; k++)
     {
         var g2 = svg.append("g")
                 .attr("class","year")
-                .attr("transform","translate(0," + 20 + ")");
+                .attr("transform","translate(0,"+ margin.top +")");
         g2.append("circle")
           .attr("cx", xScale(k))
           .attr("cy",12)
@@ -82,11 +86,33 @@ d3.json("../../data/consistentCompanies.json", function(data) {
           .on("mouseover",annualRanking)
           .on("mouseout", restoreDefault);
     }
+
+    
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("top");
+    var formatYears = d3.format("0000");
+    xAxis.tickFormat(formatYears);
+    
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left");    
     
     svg.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + 35 + ")")
+		.attr("transform", "translate(0 ," + yOffset + ")")
 		.call(xAxis);
+    
+    svg.append("g")
+		.attr("class", "y axis")
+		.attr("transform", "translate(0," + yOffset + ")")
+		.call(yAxis)
+        .style("display","none");
+    
+    var smallestRadius = 4;
+    var largestRadius = 18;
+    var spaceBetweenRows = 40;
+    var offsetForFirstRow = 70;
     
     for (var j = 0; j < data.length; j++) {
 		var g = svg.append("g").attr("class","ranking");
@@ -102,25 +128,17 @@ d3.json("../../data/consistentCompanies.json", function(data) {
 			.append("text");
 
 		var rScale = d3.scale.linear()
-			.domain([1, 20])
-			.range([5, 19]);
+			.domain([lowestRank,highestRank])
+			.range([smallestRadius, largestRadius]);
 
 		circles
 			.attr("cx", function(d) { return xScale(d[0]); })
-			.attr("cy", j*40+70)
-			.attr("r", function(d) { return (21-rScale(d[1])); })
+			.attr("cy", j*spaceBetweenRows+offsetForFirstRow)
+			.attr("r", function(d) { return rScale(d[1]); })
 			.style("fill", function(d) { return c(j); });
 
-		text
-			.attr("y", j*40+70)
-			.attr("x",function(d, i) { return xScale(d[0])-5; })
-			.attr("class","value")
-			.text(function(d){ return d[1]; })
-			.style("fill", function(d) { return c(j); })
-			.style("display","none");
-
 		g.append("text")
-			.attr("y", j*40+70)
+			.attr("y", j*spaceBetweenRows+offsetForFirstRow)
 			.attr("x",width+30)
 			.attr("class","label")
 			.text(truncate(data[j]['orgName'],30,"..."))
@@ -140,12 +158,10 @@ d3.json("../../data/consistentCompanies.json", function(data) {
         d3.select(g).selectAll(".ranking").style("display","none");
         renderAnnualRanking(this,g);
     }
-    
+
     function renderAnnualRanking(context,g){
-        d3.json("../../data/companiesPerYear.json", function(data) {
-            var yScale = d3.scale.linear()
-		                      .domain([1,20])
-		                      .range([0, height]);
+        data = JSON.parse(companiesPerYearJSON);
+
             var g2=d3.select(context).node();
             for(var w=0; w < (end_year-start_year)+1 ; w++) {
                 if(data[w]['year'] == context.attributes['year'].value)
@@ -191,23 +207,35 @@ d3.json("../../data/consistentCompanies.json", function(data) {
                 }
                 
             }
-                
-        });
     }
 
 	function mouseover(p) {
-		var g = d3.select(this).node().parentNode;
-		d3.select(g).selectAll("circle").style("display","none");
-		d3.select(g).selectAll("text.value").style("display","block");
+        var g = d3.select(this).node().parentNode;
+		d3.select(g.parentNode).selectAll("circle").style("display","none");
+		d3.select(g.parentNode).selectAll(".y.axis").style("display","block");
+        d3.select(g.parentNode).selectAll(".label").style("display","none");
+        d3.select(this).style("display","block");
+        displayLineChart(this,g);
 	}
+    
+    function displayLineChart(context,g){
+        for(var w=0; w < (end_year-start_year)+1 ; w++) {
+            if(data[w]['orgName'] == context.textContent) {
+                var lineFunction = d3.svg.line()
+                                         .x(function(d) { return xScale(d[0]); })
+                                         .y(function(d) { return yScale(1)+yScale(d[1]); });
+                d3.select(g).append("path").attr("class","lineChart").attr("d",lineFunction(data[w]['rank']));
+            }
+        }
+    }
 
 	function mouseout(p) {
 		var g = d3.select(this).node().parentNode;
-		d3.select(g).selectAll("circle").style("display","block");
-		d3.select(g).selectAll("text.value").style("display","none");
+		d3.select(g.parentNode).selectAll("circle").style("display","block");
+		d3.select(g.parentNode).selectAll(".y.axis").style("display","none");
+		d3.select(g.parentNode).selectAll(".linechart").style("display","none");
+        d3.select(g.parentNode).selectAll(".label").style("display","block");        
 	}
-});
-    
     
 </script>
 
