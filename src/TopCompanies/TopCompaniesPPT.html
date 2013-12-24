@@ -210,6 +210,7 @@ text.value{font-size:12px;font-weight:bold;}
     }
 
 	function mouseover(p) {
+        data = JSON.parse(consistentCompaniesJSON);
         var g = d3.select(this).node().parentNode;
 		d3.select(g.parentNode).selectAll("circle").style("display","none");
 		d3.select(g.parentNode).selectAll(".y.axis").style("display","block");
@@ -224,8 +225,14 @@ text.value{font-size:12px;font-weight:bold;}
                 var lineFunction = d3.svg.line()
                                          .x(function(d) { return xScale(d[0]); })
                                          .y(function(d) { return yScale(1)+yScale(d[1]); });
-                d3.select(g).append("path").attr("class","lineChart").attr("d",lineFunction(data[w]['rank']));
+                var lineGraph_g = d3.select(g).selectAll("path");
+                if(lineGraph_g.empty())
+                    d3.select(g).append("path").attr("class","lineChart").attr("d",lineFunction(data[w]['rank']));
+                else
+                    lineGraph_g.style("display","block");
+            break;
             }
+            
         }
     }
 
