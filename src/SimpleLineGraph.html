@@ -16,6 +16,7 @@
               .attr("height",700); //rendering is only partial on some browsers
     drawLineChart(svg);
     drawCirclesOnPoints(svg);
+    addToolTipFeatureToPoints(svg);
     
     function drawLineChart(svg) {
         var lineFunc = d3.svg.line()
@@ -37,6 +38,25 @@
          .attr("cx",function(d,i) { return 50*d[0]; })
          .attr("cy",function(d,i) { return 20*d[1]; })
          .attr("r",5);        
+    }
+    
+    function addToolTipFeatureToPoints(svg) {
+        svg.selectAll("circle")
+            .on("mouseover.tooltip", function(d){
+                d3.select("text#toolTip").remove();
+                svg.append("text")
+                    .text(d[0]+", "+d[1])
+                    .attr("x",function() { 
+                        return 50*d[0] + 10; })
+                    .attr("y",function() { 
+                        return 20*d[1] - 10; })
+                    .attr("id","toolTip");
+            });  
+        
+        svg.selectAll("circle")
+            .on("mouseout.tooltip", function(d) {
+               d3.select("text#toolTip").remove();
+            });
     }
     
 </script> 
