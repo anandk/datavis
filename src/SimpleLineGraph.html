@@ -2,7 +2,8 @@
 <head>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <style>
-        path {fill:none;stroke:#15c2c2;stroke-width: 1.5px;} //fill:none is vital for line graph
+        path {fill:none;stroke:#15c2c2;stroke-width: 1.5px;}
+        circle {fill:#95c2e2;}
     </style>
 </head>
  
@@ -10,16 +11,34 @@
 <script type="text/javascript">
     //Arbitrary x, y coordinates
     var sampleData = [[1,1],[2,8],[3,1],[4,10],[5,11],[6,12],[7,3]];
-    
-    var lineFunc = d3.svg.line()
-    .x(function(d,i) { return 50*d[0]; }) //Multiplying simply to amplify
-    .y(function(d,i) { return 50*d[1]; });//Multiplying simply to amplify
-    
     var svg = d3.select("body").append("svg")
               .attr("width",500)   //One could do without these attr but
               .attr("height",700); //rendering is only partial on some browsers
+    drawLineChart(svg);
+    drawCirclesOnPoints(svg);
     
-    svg.append("path").datum(sampleData).attr("class","lineChart").attr("d",lineFunc);
+    function drawLineChart(svg) {
+        var lineFunc = d3.svg.line()
+                            .x(function(d,i) { return 50*d[0]; }) //Multiplying simply to amplify
+                            .y(function(d,i) { return 20*d[1]; });//Multiplying simply to amplify
+        svg.append("path")
+           .datum(sampleData)
+           .attr("class","lineChart")
+           .attr("d",lineFunc);
+
+    }
+    
+    function drawCirclesOnPoints(svg) {
+        var g = svg.append("g").attr("class","points");
+        g.selectAll("circle")
+         .data(sampleData)
+         .enter()
+         .append("circle")
+         .attr("cx",function(d,i) { return 50*d[0]; })
+         .attr("cy",function(d,i) { return 20*d[1]; })
+         .attr("r",5);        
+    }
+    
 </script> 
 </body>
 </html>
