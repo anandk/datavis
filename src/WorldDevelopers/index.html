@@ -4,10 +4,10 @@
   <head>
 	<title>Number of Developers Across the Globe</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <script type="text/javascript" src="d3.v3.min.js"></script>
-    <script type="text/javascript" src="d3.geo.js"></script>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
-    <link type="text/css" rel="stylesheet" href="colorbrewer.css"/>
+    <script type="text/javascript" src="../../js/d3.v3.js"></script>
+    <script type="text/javascript" src="../../js/d3.geo.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../styles/style.css"/>
+    <link type="text/css" rel="stylesheet" href="../../styles/colorbrewer.css"/>
     <style type="text/css">
 
 svg {
@@ -59,7 +59,7 @@ var colour = d3.scale.threshold()
   //      Greenland, Brazil, South Africa, India, USA
   
 
-d3.json("world-countriesMod.json", function(collection) {
+d3.json("../../data/world-countriesMod.json", function(collection) {
   feature = svg.selectAll("path")
       .data(collection.features)
     .enter().append("svg:path")

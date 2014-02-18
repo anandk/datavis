@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <style>
+        #tooltip.hidden {
+            display: none;
+        }
+        #tooltip p {
+            margin: 0;
+            color: white;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        #tooltip {
+            position: absolute;
+            width: 210px;
+            height: auto;
+            padding: 10px;
+            background-color: #212121;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-transition: all 0.2s;
+            -o-transition: all 0.2;
+            -webkit-transition: all 0.2s;
+            transition: all 0.2s;
+            opacity: 0.90;
+            pointer-events: none;
+        } 
+    </style>
+    <script src="../../js/d3.v3.min.js"></script>
+    <script src="../../js/d3.geo.js"></script>
+    <script src="../../js/colorbrewer.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script>
+        var imrState = d3.map();
+        function draw(data) {
+            drawMap(data);
+            drawGraphs(data);
+        }
+        
+        function getColorForNode(d) {
+            var p = d3.scale.quantize().domain([30,80]).range(colorbrewer.YlOrRd[9]);
+            var metricValue = imrState.get(d);
+            return p(metricValue);
+        }
+        function drawMap(data) {
+            var mapWidth = 500, 
+                mapHeight = 500;
+            "use strict";
+            var projection = d3.geo.mercator().scale(5000).translate([-900,600]);
+            var path = d3.geo.path().projection(projection);
+            var svg = d3.select("#map")
+                .append("svg")
+                    .attr("width", mapWidth)
+                    .attr("height", mapHeight);
+            var mapDiv = svg.append("g").attr("class","map");
+            mapDiv.selectAll("path")
+               .data(data.features)
+               .enter()
+               .append("path")
+               .attr("d", path)
+               .style("fill", function(d,i) { return getColorForNode(d.properties.REGIONID_1);})
+               .on("mouseover", function(d) {
+                    d3.select("#tooltip")
+                    .style("left", path.centroid(d)[0] + 30 + "px") 
+                    .style("top", path.centroid(d)[1] + "px") 
+                    .select("#statevalue")
+                    .text(d.properties.name+" has "+imrState.get(d.properties.REGIONID_1)+"\nanaemic children in 100");
+                d3.select("#tooltip").classed("hidden", false);
+               })
+              .on("mouseout", function() {
+                d3.select("#tooltip").classed("hidden", true);
+               });
+        }
+        
+        function drawGraphs(data) {
+            
+        }
+        </script>
+    
+    <script type="text/javascript" src="http://www.google.com/jsapi">
+</script>
+<script type="text/javascript">
+        // jsData
+        function gvisDataSteppedAreaChartID1c50792141b4 ()
+        {
+        var data = new google.visualization.DataTable();
+        var datajson =
+                [
+                [
+                "6 to 8",
+                50.5,
+                27.5,
+                1.6
+                ],
+                [
+                "9 to 11",
+                51.7,
+                27.6,
+                2.4
+                ],
+                [
+                "12 to 17",
+                56,
+                24,
+                4.6
+                ],
+                [
+                "18 to 23",
+                53.4,
+                23.8,
+                4.4
+                ],
+                [
+                "24 to 35",
+                44.1,
+                26.6,
+                3.9
+                ],
+                [
+                "36 to 47",
+                33.1,
+                27.3,
+                2.7
+                ],
+                [
+                "48 to 59",
+                24.9,
+                26.9,
+                1.2
+                ]
+                ];
+        data.addColumn('string','Age');
+        data.addColumn('number','Mild');
+        data.addColumn('number','Moderate');
+        data.addColumn('number','Severe');
+        data.addRows(datajson);
+        return(data);
+        }
+        // jsDrawChart
+        function drawChartSteppedAreaChartID1c50792141b4() {
+        var data = gvisDataSteppedAreaChartID1c50792141b4();
+        var options = {
+                title: 'Percentage of Anaemia in children of different age groups',
+                vAxis: {title: 'Percentage of mild/moderate/severe anaemia'},
+                hAxis: {title:'Age group in months'},
+                isStacked: true
+        };
+        options["allowHtml"] = true;
+        var chart = new google.visualization.SteppedAreaChart(
+        document.getElementById('SteppedAreaChartID1c50792141b4')
+        );
+        chart.draw(data,options);
+        }
+        // jsDisplayChart
+        function displayChartSteppedAreaChartID1c50792141b4()
+        {
+        google.load("visualization", "1", { packages:["corechart"] });
+        google.setOnLoadCallback(drawChartSteppedAreaChartID1c50792141b4);
+        }
+        // jsChart
+        displayChartSteppedAreaChartID1c50792141b4()
+        <!-- jsFooter -->
+        //-->
+</script> 
+
+<script type="text/javascript">
+    // jsData
+    function gvisDataColumnChartID1c5034ee308a ()
+    {
+    var data = new google.visualization.DataTable();
+    var datajson =
+    [
+    [
+    "Male",
+    25.7,
+    40.2,
+    3.2
+    ],
+    [
+    "Female",
+    27.1,
+    40.2,
+    2.7
+    ]
+    ];
+    data.addColumn('string','Sex');
+    data.addColumn('number','Mild');
+    data.addColumn('number','Moderate');
+    data.addColumn('number','Severe');
+    data.addRows(datajson);
+    return(data);
+    }
+    // jsDrawChart
+    function drawChartColumnChartID1c5034ee308a() {
+    var data = gvisDataColumnChartID1c5034ee308a();
+    var options = {};
+    options["allowHtml"] = true;
+    options["title"] = "Percentage of Anaemia across sexes";
+    options["vAxis"] = {title:'Percentage of mild/moderate/severe anaemia'};
+    var chart = new google.visualization.ColumnChart(
+    document.getElementById('ColumnChartID1c5034ee308a')
+    );
+    chart.draw(data,options);
+    }
+    // jsDisplayChart
+    function displayChartColumnChartID1c5034ee308a()
+    {
+    google.load("visualization", "1", { packages:["corechart"] });
+    google.setOnLoadCallback(drawChartColumnChartID1c5034ee308a);
+    }
+    // jsChart
+    displayChartColumnChartID1c5034ee308a()
+    <!-- jsFooter -->
+    //-->
+</script> 
+
+<script type="text/javascript">
+    // jsData
+    function gvisDataLineChartID1c507eb8378d ()
+    {
+    var data = new google.visualization.DataTable();
+    var datajson =
+    [
+    [
+    "Lowest",
+    27.7,
+    45.8,
+    3
+    ],
+    [
+    "Second",
+    26.9,
+    43.4,
+    3.3
+    ],
+    [
+    "Middle",
+    26.2,
+    39.7,
+    3.4
+    ],
+    [
+    "Fourth",
+    24.9,
+    37.3,
+    2.6
+    ],
+    [
+    "Highest",
+    25,
+    29.2,
+    2.1
+    ]
+    ];
+    data.addColumn('string','Wealth.Index');
+    data.addColumn('number','Mild');
+    data.addColumn('number','Moderate');
+    data.addColumn('number','Severe');
+    data.addRows(datajson);
+    return(data);
+    }
+    // jsDrawChart
+    function drawChartLineChartID1c507eb8378d() {
+    var data = gvisDataLineChartID1c507eb8378d();
+    var options = {};
+    options["allowHtml"] = true;
+    options["title"] = "Percentage of anaemia across wealth percentiles";
+    options["vAxis"] = {title:'Percentage of mild/moderate/severe anaemia'};
+    options["curveType"] = "function";
+    var chart = new google.visualization.LineChart(
+    document.getElementById('LineChartID1c507eb8378d')
+    );
+    chart.draw(data,options);
+    }
+    // jsDisplayChart
+    function displayChartLineChartID1c507eb8378d()
+    {
+    google.load("visualization", "1", { packages:["corechart"] });
+    google.setOnLoadCallback(drawChartLineChartID1c507eb8378d);
+    }
+    // jsChart
+    displayChartLineChartID1c507eb8378d()
+    <!-- jsFooter -->
+    //-->
+</script>
+
+</head>
+<body>
+    <div id="tooltip" class="hidden">
+        <p id="stateid" style="font-weight:bold;font-size:18px"><strong></strong></p>
+        <p><span id="statevalue" style="font-size:16px"></span></p>
+        <p><span id="inf" style="font-size:16px"></span></p>
+    </div> 
+    <div id="map" style="width: 550px; height: 500px; float:left;"></div>
+    <div id="SteppedAreaChartID1c50792141b4" style="width: 500px; height: 350px; float:right;">
+    </div>
+    <div id="ColumnChartID1c5034ee308a" style="width: 500px; height: 350px; float:left;">
+    </div>
+    <div id="LineChartID1c507eb8378d" style="width: 850px; height: 350px; float:left;">
+    </div>
+    <script>
+        queue() 
+            .defer(d3.csv, "../../data/nutrition.csv", function(d) { imrState.set(d.id, +d.anaemia); })
+            .await(onceLoaded);
+        
+        function onceLoaded(error, par) {
+            d3.json("../../data/LowResIndia.json", draw);
+        }
+    </script>
+</body>
+</html>

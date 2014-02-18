@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="d3.js"></script>
+    <script>
+        function draw(data) {
+        "use strict";
+        
+        }
+        </script>
+</head>
+<body>
+
+<form>
+  <label><input type="radio" name="mode" value="grouped" checked> Global</label>
+  <label><input type="radio" name="mode" value="stacked"> India</label>
+  <label><br>Parameters: 
+      <select>
+       <option value="ghi">Global Hunger Index</option>
+       <option value="nourish">% Undernourished</option>
+       <option value="weight">% Underweight</option>
+       <option value="mortal">Below 5 yrs mortality rate</option>
+      </select>
+  </label>
+</form>
+
+    <script>
+        d3.json("data/some_data.json", draw);
+    </script>
+</body>
+</html>
